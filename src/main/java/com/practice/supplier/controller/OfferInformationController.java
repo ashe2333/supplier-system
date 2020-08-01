@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-07-27
  */
 @RestController
-@RequestMapping("/supplier/offer-informationn")
-public class OfferInformationnController {
+@RequestMapping("/supplier/offer-information")
+public class OfferInformationController {
 
 }
