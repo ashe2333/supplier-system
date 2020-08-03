@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@ApiModel(value="OfferInformationn对象", description="")
+@ApiModel(value="OfferInformation对象", description="")
 public class OfferInformation extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

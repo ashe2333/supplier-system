@@ -54,7 +54,7 @@ public class OfferInformationController {
         return offerInformationService.getALLOfferInformation(pagination);
     }
 
-    @ApiOperation("获取用户所有的报价信息")
+    @ApiOperation("用户获取所有的报价信息")
     @GetMapping("/getOfferInformationByUserId")
     //@Permission
     public ServerResponse getOfferInformationByUserId(Pagination pagination) {
