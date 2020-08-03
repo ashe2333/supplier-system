@@ -14,6 +14,7 @@ import com.practice.supplier.model.form.Pagination;
 import com.practice.supplier.service.IUserMarginService;
 import com.practice.supplier.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.practice.supplier.untils.EncryptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -40,7 +41,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public ServerResponse login(String username, String password) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username)
-                .eq("password", password);
+                .eq("password", EncryptionService.encryption(password));
         User s = this.getOne(queryWrapper);
         if(s==null) throw new AuthenticationException("账号或密码错误");
         String token = JWTUtil.encryptToken(JWTUtil.sign(s.getId(),s.getIdentity()));
@@ -52,6 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public ServerResponse registered(User user) {
+        user.setPassword(EncryptionService.encryption(user.getPassword()));
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", user.getUsername());
         if(baseMapper.selectList(queryWrapper).isEmpty()){
@@ -68,6 +70,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public ServerResponse changePassword(User user) {
+        user.setPassword(EncryptionService.encryption(user.getPassword()));
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("username",user.getUsername())
                 .ne("password",user.getPassword());
@@ -82,6 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public ServerResponse changePasswordBySecret(User user) {
+        user.setPassword(EncryptionService.encryption(user.getPassword()));
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("username",user.getUsername())
                 .eq("secret_question",user.getSecretQuestion())

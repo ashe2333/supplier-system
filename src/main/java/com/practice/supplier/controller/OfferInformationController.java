@@ -36,14 +36,14 @@ public class OfferInformationController {
     @ApiOperation("添加报价信息")
     @PostMapping("/addOfferInformation")
     //@Permission
-    public ServerResponse addOfferInformation(OfferInformation offerInformation) {
+    public ServerResponse addOfferInformation(@RequestBody OfferInformation offerInformation) {
         return offerInformationService.addOfferInformation(offerInformation);
     }
 
     @ApiOperation("审核报价信息")
     @PostMapping("/updateOfferInformation")
     //@Permission
-    public ServerResponse updateOfferInformation(OfferInformation offerInformation) {
+    public ServerResponse updateOfferInformation(@RequestBody OfferInformation offerInformation) {
         return offerInformationService.updateOfferInformation(offerInformation);
     }
 

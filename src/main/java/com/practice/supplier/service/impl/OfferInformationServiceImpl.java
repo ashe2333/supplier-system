@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,6 +62,19 @@ public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMap
         queryWrapper.eq("id",offerInformation.getId());
         offerInformation.setUpdateTime(LocalDateTime.now());
         if(baseMapper.update(offerInformation,queryWrapper)==1){
+            if(offerInformation.getStatus() == 2){
+                QueryWrapper<OfferInformation> offerInformationQueryWrapper = new QueryWrapper<>();
+                offerInformationQueryWrapper.eq("purchase_order",offerInformation.getPurchaseOrder())
+                        .eq("status",0);
+                List<OfferInformation> offerInformationList = baseMapper.selectList(offerInformationQueryWrapper);
+                List<OfferInformation> updateList = new ArrayList<>();
+                for(OfferInformation offerInformation1 : offerInformationList){
+                    offerInformation1.setUpdateTime(LocalDateTime.now());
+                    offerInformation1.setStatus(1);
+                    updateList.add(offerInformation1);
+                }
+                this.saveOrUpdateBatch(updateList);
+            }
             return ServerResponse.createBySuccess();
         }else return ServerResponse.createByError();
     }
@@ -103,4 +117,5 @@ public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMap
         PageInfo<OfferInformation> pageInfo= new PageInfo<>(offerInformationList);
         return ServerResponse.createBySuccess(pageInfo);
     }
+
 }

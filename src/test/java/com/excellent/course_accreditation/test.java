@@ -9,11 +9,13 @@ import com.practice.supplier.dao.PurchaseInformationMapper;
 import com.practice.supplier.dao.UserMapper;
 import com.practice.supplier.model.entity.User;
 import com.practice.supplier.service.impl.InformationServiceImpl;
+import com.practice.supplier.untils.EncryptionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest(classes = {Application.class})
@@ -60,6 +62,17 @@ public class test extends ServiceImpl<UserMapper, User> {
             myPath.mkdir();
             System.out.println("创建文件夹路径为："+ filePar);
         }
+    }
+
+    @Test
+    void test6(){
+        List<User> userList = baseMapper.selectList(null);
+        List<User> updateList = new ArrayList<>();
+        for (User user : userList) {
+            user.setPassword(EncryptionService.encryption(user.getPassword()));
+            updateList.add(user);
+        }
+        this.saveOrUpdateBatch(updateList);
     }
 
 
