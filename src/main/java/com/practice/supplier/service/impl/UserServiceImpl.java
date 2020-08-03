@@ -103,6 +103,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return ServerResponse.createBySuccess(userList);
     }
 
+    @Override
+    public ServerResponse getUserByUserName(String userName) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",userName);
+        User s = this.getOne(queryWrapper);
+        if(s==null){
+            return  ServerResponse.createByErrorMessage("账号错误");
+        }
+        return ServerResponse.createBySuccess(s);
+    }
+
 
     @Override
     public String getRoleByToken() {

@@ -15,6 +15,8 @@ import com.practice.supplier.model.form.Pagination;
  */
 public interface IOfferInformationService extends IService<OfferInformation> {
 
+    ServerResponse judgment(String companyName);
+
     ServerResponse addOfferInformation(OfferInformation offerInformation);
 
     ServerResponse updateOfferInformation(OfferInformation offerInformation);
@@ -25,6 +27,6 @@ public interface IOfferInformationService extends IService<OfferInformation> {
 
     ServerResponse getOfferInformationByStatus(Pagination pagination);
 
-    ServerResponse getPurchaseInformationByPurchaseOrder(Pagination pagination);
+    ServerResponse getOfferInformationByPurchaseOrder(Pagination pagination);
 
 }

@@ -1,9 +1,13 @@
 package com.practice.supplier.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import com.practice.supplier.common.annotation.Permission;
+import com.practice.supplier.common.domain.ServerResponse;
+import com.practice.supplier.model.form.LoginForm;
+import com.practice.supplier.service.IUserMarginService;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.lang.NonNull;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -16,5 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/supplier/user-margin")
 public class UserMarginController {
+
+    private IUserMarginService userMarginService;
+
+    public UserMarginController(IUserMarginService userMarginService){
+        this.userMarginService = userMarginService;
+    }
+
+    @ApiOperation("获取用户的保证金信息·")
+    @GetMapping("/getUserMargin")
+    //@Permission
+    public ServerResponse getUserMargin() {
+        return userMarginService.getUserMarginByUserId();
+    }
 
 }

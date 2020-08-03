@@ -67,6 +67,14 @@ public class UserController {
     }
 
 
+    @ApiOperation("通过用户名获取用户信息（可用于获取密保问题）")
+    @GetMapping("/getUser")
+    //@Permission
+    public ServerResponse getUser(String userName){
+        return userService.getUserByUserName(userName);
+    }
+
+
     @GetMapping("/getUserInfo")
     @Permission(roles = {"user","admin"})
     public ServerResponse getUserInfo() {

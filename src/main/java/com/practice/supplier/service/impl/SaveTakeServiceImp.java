@@ -16,10 +16,12 @@ import com.practice.supplier.service.IMarginChangeService;
 import com.practice.supplier.service.ISaveTakeService;
 import com.practice.supplier.service.IUserMarginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class SaveTakeServiceImp extends ServiceImpl<SaveTakeMapper, SaveTake> implements ISaveTakeService {
 
     @Autowired

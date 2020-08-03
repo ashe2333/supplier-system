@@ -64,7 +64,7 @@ public class InformationController {
         return iInformationService.getAllInformation(pagination);
     }
 
-    @ApiOperation("根据状态获取用户注册信息")
+    @ApiOperation("管理员获得用户注册信息(需状态status）")
     @GetMapping("/getInformationByStatus")
     public ServerResponse getInformationByStatus(Pagination pagination){
         return iInformationService.getInformationByStatus(pagination);

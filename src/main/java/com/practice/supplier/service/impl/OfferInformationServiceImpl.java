@@ -4,12 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.practice.supplier.common.domain.ServerResponse;
+import com.practice.supplier.dao.QualificationsMapper;
 import com.practice.supplier.manage.UserManage;
 import com.practice.supplier.model.entity.OfferInformation;
 import com.practice.supplier.dao.OfferInformationMapper;
+import com.practice.supplier.model.entity.Qualifications;
 import com.practice.supplier.model.form.Pagination;
 import com.practice.supplier.service.IOfferInformationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,6 +28,22 @@ import java.util.List;
  */
 @Service
 public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMapper, OfferInformation> implements IOfferInformationService {
+
+    @Autowired
+    private QualificationsMapper qualificationsMapper;
+
+
+    @Override
+    public ServerResponse judgment(String companyName) {
+        QueryWrapper<Qualifications> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id",1)
+                .eq("registered_object",companyName)
+                .eq("status",2);
+        if(qualificationsMapper.selectList(queryWrapper).isEmpty()){
+            return ServerResponse.createByErrorMessage("不具备该公司的供应资格");
+        }
+        return ServerResponse.createBySuccess();
+    }
 
     @Override
     public ServerResponse addOfferInformation(OfferInformation offerInformation) {
@@ -75,9 +94,10 @@ public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMap
     }
 
     @Override
-    public ServerResponse getPurchaseInformationByPurchaseOrder(Pagination pagination) {
+    public ServerResponse getOfferInformationByPurchaseOrder(Pagination pagination) {
         QueryWrapper<OfferInformation> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("purchase_order",pagination.getOthers());
+        queryWrapper.eq("purchase_order",pagination.getOthers())
+                .eq("user_id",UserManage.getUserId());
         PageHelper.startPage(pagination.getPageNum(),pagination.getPageSize());
         List<OfferInformation> offerInformationList = baseMapper.selectList(queryWrapper);
         PageInfo<OfferInformation> pageInfo= new PageInfo<>(offerInformationList);

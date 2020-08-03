@@ -5,6 +5,7 @@ import com.practice.supplier.common.domain.ServerResponse;
 import com.practice.supplier.model.entity.SaveTake;
 import com.practice.supplier.model.form.Pagination;
 
+
 public interface ISaveTakeService extends IService<SaveTake> {
 
     ServerResponse addSaveTake(SaveTake saveTake);

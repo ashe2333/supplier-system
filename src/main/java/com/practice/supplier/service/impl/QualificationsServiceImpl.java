@@ -76,6 +76,12 @@ public class QualificationsServiceImpl extends ServiceImpl<QualificationsMapper,
 
     @Override
     public ServerResponse deleteQualifications(String registeredObject) {
-        return null;
+        QueryWrapper<Qualifications> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id",UserManage.getUserId())
+                .eq("registered_object",registeredObject);
+        if(baseMapper.delete(queryWrapper)==1){
+            return ServerResponse.createBySuccess();
+        }
+        return ServerResponse.createByErrorMessage("请稍后重试");
     }
 }

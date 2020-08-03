@@ -25,5 +25,7 @@ public interface IUserService extends IService<User> {
 
     ServerResponse getAllUser(Pagination pagination);
 
+    ServerResponse getUserByUserName(String userName);
+
     String getRoleByToken();
 }
