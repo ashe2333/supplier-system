@@ -1,6 +1,8 @@
-package com.practice.supplier.controller;
+package com.practice.supplier.controller.user;
 
 
+import com.practice.supplier.common.annotation.Permission;
+import com.practice.supplier.common.domain.Const;
 import com.practice.supplier.common.domain.ServerResponse;
 import com.practice.supplier.model.entity.MarginChange;
 import com.practice.supplier.model.form.Pagination;
@@ -27,20 +29,18 @@ public class MarginChangeController {
     }
 
 
-    @ApiOperation("用户缴纳保证金")
+    @ApiOperation("用户缴纳保证金(需userId)")
     @PostMapping("/addIMarginChange")
-    //@Permission
+    @Permission(roles = Const.USER)
     public ServerResponse addIMarginChange(@RequestBody MarginChange marginChange) {
         return marginChangeService.addIMarginChangeByMargin(marginChange);
     }
 
-    @ApiOperation("获取用户的保证金变动信息")
+    @ApiOperation("用户获取保证金变动信息")
     @GetMapping("/getUserMargin")
-    //@Permission
+    @Permission(roles = Const.USER)
     public ServerResponse getUserMargin(Pagination pagination) {
         return marginChangeService.getMarginChangeByUserId(pagination);
     }
-
-
 
 }

@@ -33,6 +33,9 @@ public class PurchaseInformation extends BaseEntity {
     @ApiModelProperty(value = "截止日期")
     private LocalDateTime deadline;
 
+    @ApiModelProperty(value = "报价所需保证金")
+    private float margin;
+
     @ApiModelProperty(value = "0：可报价  1：已结束")
     private Integer status;
 

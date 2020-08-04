@@ -55,6 +55,14 @@ public class QualificationsServiceImpl extends ServiceImpl<QualificationsMapper,
     }
 
     @Override
+    public ServerResponse getAllQualifications(Pagination pagination) {
+        PageHelper.startPage(pagination.getPageNum(),pagination.getPageSize());
+        List<Qualifications> qualificationsList = baseMapper.selectList(null);
+        PageInfo<Qualifications> pageInfo= new PageInfo<>(qualificationsList);
+        return ServerResponse.createBySuccess(pageInfo);
+    }
+
+    @Override
     public ServerResponse getQualificationsByUserId(Pagination pagination) {
         QueryWrapper<Qualifications> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",UserManage.getUserId());

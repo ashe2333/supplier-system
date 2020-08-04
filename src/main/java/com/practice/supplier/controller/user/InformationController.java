@@ -1,6 +1,8 @@
-package com.practice.supplier.controller;
+package com.practice.supplier.controller.user;
 
 
+import com.practice.supplier.common.annotation.Permission;
+import com.practice.supplier.common.domain.Const;
 import com.practice.supplier.common.domain.ServerResponse;
 import com.practice.supplier.manage.UserManage;
 import com.practice.supplier.model.entity.Information;
@@ -36,37 +38,31 @@ public class InformationController {
 
     @ApiOperation("上传文件")
     @PostMapping("/uploadImage")
+    @Permission(roles = Const.USER)
     public ServerResponse uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
         return userManage.uploadAvatar(file);
     }
 
     @ApiOperation("添加注册信息")
     @PostMapping("/registered")
+    @Permission(roles = Const.USER)
     public ServerResponse registered(@RequestBody Information information){
         return iInformationService.registered(information);
     }
 
     @ApiOperation("修改注册信息")
     @PostMapping("/changeInformation")
+    @Permission(roles = Const.USER)
     public ServerResponse changeInformation(@RequestBody Information information){
         return iInformationService.updateInformation(information);
     }
 
     @ApiOperation("用户获取自己的用户信息")
     @GetMapping("/getInformationById")
+    @Permission(roles = Const.USER)
     public ServerResponse getInformationById(){
         return iInformationService.getInformationById();
     }
 
-    @ApiOperation("获取所有用户注册信息")
-    @GetMapping("/getAllInformation")
-    public ServerResponse getAllInformation(Pagination pagination){
-        return iInformationService.getAllInformation(pagination);
-    }
 
-    @ApiOperation("管理员获得用户注册信息(需状态status）")
-    @GetMapping("/getInformationByStatus")
-    public ServerResponse getInformationByStatus(Pagination pagination){
-        return iInformationService.getInformationByStatus(pagination);
-    }
 }

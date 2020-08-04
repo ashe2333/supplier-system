@@ -23,5 +23,7 @@ public interface IInformationService extends IService<Information> {
     //查询单个供应商信息
     ServerResponse getInformationById();
 
+    ServerResponse getInformationById1(int userId);
+
     ServerResponse getInformationByStatus(Pagination pagination);
 }

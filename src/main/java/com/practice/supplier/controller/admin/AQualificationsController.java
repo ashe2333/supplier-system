@@ -1,6 +1,8 @@
-package com.practice.supplier.controller;
+package com.practice.supplier.controller.admin;
 
 
+import com.practice.supplier.common.annotation.Permission;
+import com.practice.supplier.common.domain.Const;
 import com.practice.supplier.common.domain.ServerResponse;
 import com.practice.supplier.manage.UserManage;
 import com.practice.supplier.model.entity.Qualifications;
@@ -19,51 +21,37 @@ import org.springframework.web.bind.annotation.*;
  * @since 2020-07-27
  */
 @RestController
-@RequestMapping("/supplier/qualifications")
-public class QualificationsController {
+@RequestMapping("/supplier/admin/qualifications")
+public class AQualificationsController {
 
-    @Autowired
-    private UserManage userManage;
 
     private IQualificationsService qualificationsService;
 
-    public QualificationsController(IQualificationsService qualificationsService){
+    public AQualificationsController(IQualificationsService qualificationsService){
         this.qualificationsService = qualificationsService;
     }
 
-    @ApiOperation("用户添加注册对象信息")
-    @PostMapping("/addIMarginChange")
-    //@Permission
-    public ServerResponse addIMarginChange(@RequestBody Qualifications qualifications){
-        return qualificationsService.addQualifications(qualifications);
-    }
 
     @ApiOperation("管理员审核注册对象信息")
     @PostMapping("/updateQualifications")
-    //@Permission
+    @Permission(roles = Const.ADMIN)
     public ServerResponse updateQualifications(@RequestBody Qualifications qualifications) {
         return qualificationsService.updateQualifications(qualifications);
     }
 
-    @ApiOperation("用户获取自己的注册对象信息")
-    @GetMapping("/getQualificationsByUserId")
-    //@Permission
-    public ServerResponse getQualificationsByUserId(Pagination pagination) {
-        return qualificationsService.getQualificationsByUserId(pagination);
-    }
 
     @ApiOperation("管理员依据状态（status）获取注册信息")
     @GetMapping("/getQualificationsByStatus")
-    //@Permission
+    @Permission(roles = Const.ADMIN)
     public ServerResponse getQualificationsByStatus(Pagination pagination) {
         return qualificationsService.getQualificationsByStatus(pagination);
     }
 
-    @ApiOperation("取消申请，需注册对象")
-    @GetMapping("/deleteQualifications")
-    //@Permission
-    public ServerResponse deleteQualifications(String registeredObject) {
-        return qualificationsService.deleteQualifications(registeredObject);
+    @ApiOperation("管理员依据获取所有注册信息")
+    @GetMapping("/getAllQualifications")
+    @Permission(roles = Const.ADMIN)
+    public ServerResponse getAllQualifications(Pagination pagination) {
+        return qualificationsService.getAllQualifications(pagination);
     }
 
 }

@@ -1,6 +1,8 @@
-package com.practice.supplier.controller;
+package com.practice.supplier.controller.user;
 
 
+import com.practice.supplier.common.annotation.Permission;
+import com.practice.supplier.common.domain.Const;
 import com.practice.supplier.common.domain.ServerResponse;
 import com.practice.supplier.model.entity.OfferInformation;
 import com.practice.supplier.model.form.Pagination;
@@ -28,49 +30,36 @@ public class OfferInformationController {
 
     @ApiOperation("判断是否能报价")
     @GetMapping("/judgment")
-    //@Permission
+    @Permission(roles = Const.USER)
     public ServerResponse judgment(String companyName) {
         return offerInformationService.judgment(companyName);
     }
 
     @ApiOperation("添加报价信息")
     @PostMapping("/addOfferInformation")
-    //@Permission
+    @Permission(roles = Const.USER)
     public ServerResponse addOfferInformation(@RequestBody OfferInformation offerInformation) {
         return offerInformationService.addOfferInformation(offerInformation);
     }
 
-    @ApiOperation("审核报价信息")
-    @PostMapping("/updateOfferInformation")
-    //@Permission
-    public ServerResponse updateOfferInformation(@RequestBody OfferInformation offerInformation) {
-        return offerInformationService.updateOfferInformation(offerInformation);
-    }
-
-    @ApiOperation("获取所有的报价信息")
-    @GetMapping("/getALLOfferInformation")
-    //@Permission
-    public ServerResponse getALLOfferInformation(Pagination pagination) {
-        return offerInformationService.getALLOfferInformation(pagination);
-    }
 
     @ApiOperation("用户获取所有的报价信息")
     @GetMapping("/getOfferInformationByUserId")
-    //@Permission
+    @Permission(roles = Const.USER)
     public ServerResponse getOfferInformationByUserId(Pagination pagination) {
         return offerInformationService.getOfferInformationByUserId(pagination);
     }
 
     @ApiOperation("依据报价信息状态（status）获取报价信息")
     @GetMapping("/getOfferInformationByStatus")
-    //@Permission
+    @Permission(roles = Const.USER)
     public ServerResponse getOfferInformationByStatus(Pagination pagination) {
-        return offerInformationService.getOfferInformationByStatus(pagination);
+        return offerInformationService.getOfferInformationByStatusByUser(pagination);
     }
 
     @ApiOperation("依据采购单号搜索报价信息，搜索内容为（others）")
     @GetMapping("/getOfferInformationByPurchaseOrder")
-    //@Permission
+    @Permission(roles = Const.USER)
     public ServerResponse getOfferInformationByPurchaseOrder(Pagination pagination) {
         return offerInformationService.getOfferInformationByPurchaseOrder(pagination);
     }

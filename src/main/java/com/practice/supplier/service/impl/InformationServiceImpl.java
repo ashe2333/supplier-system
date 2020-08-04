@@ -8,9 +8,11 @@ import com.practice.supplier.common.domain.ServerResponse;
 import com.practice.supplier.manage.UserManage;
 import com.practice.supplier.model.entity.Information;
 import com.practice.supplier.dao.InformationMapper;
+import com.practice.supplier.model.entity.UserMargin;
 import com.practice.supplier.model.form.Pagination;
 import com.practice.supplier.service.IInformationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.practice.supplier.service.IUserMarginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +66,14 @@ public class InformationServiceImpl extends ServiceImpl<InformationMapper, Infor
     public ServerResponse getInformationById() {
         QueryWrapper<Information> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",UserManage.getUserId());
+        Information information = this.getOne(queryWrapper);
+        return ServerResponse.createBySuccess(information);
+    }
+
+    @Override
+    public ServerResponse getInformationById1(int userId) {
+        QueryWrapper<Information> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id",userId);
         Information information = this.getOne(queryWrapper);
         return ServerResponse.createBySuccess(information);
     }

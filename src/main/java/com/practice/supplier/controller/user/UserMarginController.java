@@ -1,13 +1,14 @@
-package com.practice.supplier.controller;
+package com.practice.supplier.controller.user;
 
 
 import com.practice.supplier.common.annotation.Permission;
+import com.practice.supplier.common.domain.Const;
 import com.practice.supplier.common.domain.ServerResponse;
-import com.practice.supplier.model.form.LoginForm;
 import com.practice.supplier.service.IUserMarginService;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -29,7 +30,7 @@ public class UserMarginController {
 
     @ApiOperation("获取用户的保证金信息·")
     @GetMapping("/getUserMargin")
-    //@Permission
+    @Permission(roles = Const.USER)
     public ServerResponse getUserMargin() {
         return userMarginService.getUserMarginByUserId();
     }

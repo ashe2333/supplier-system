@@ -64,9 +64,18 @@ public class SaveTakeServiceImp extends ServiceImpl<SaveTakeMapper, SaveTake> im
     }
 
     @Override
+    public ServerResponse getAllSaveTake(Pagination pagination) {
+        PageHelper.startPage(pagination.getPageNum(),pagination.getPageSize());
+        List<SaveTake> saveTakeList = baseMapper.selectList(null);
+        PageInfo<SaveTake> pageInfo= new PageInfo<>(saveTakeList);
+        return ServerResponse.createBySuccess(pageInfo);
+    }
+
+    @Override
     public ServerResponse getSaveTakeByUseId(Pagination pagination) {
         QueryWrapper<SaveTake> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",UserManage.getUserId());
+        PageHelper.startPage(pagination.getPageNum(),pagination.getPageSize());
         List<SaveTake> saveTakeList = baseMapper.selectList(queryWrapper);
         PageInfo<SaveTake> pageInfo= new PageInfo<>(saveTakeList);
         return ServerResponse.createBySuccess(pageInfo);
@@ -81,4 +90,5 @@ public class SaveTakeServiceImp extends ServiceImpl<SaveTakeMapper, SaveTake> im
         PageInfo<SaveTake> pageInfo= new PageInfo<>(saveTakeList);
         return ServerResponse.createBySuccess(pageInfo);
     }
+
 }

@@ -12,7 +12,10 @@ public interface ISaveTakeService extends IService<SaveTake> {
 
     ServerResponse updateSaveTake(SaveTake saveTake);
 
+    ServerResponse getAllSaveTake(Pagination pagination);
+
     ServerResponse getSaveTakeByUseId(Pagination pagination);
 
     ServerResponse getSaveTakeByStatus(Pagination pagination);
+
 }

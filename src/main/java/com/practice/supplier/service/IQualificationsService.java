@@ -19,6 +19,8 @@ public interface IQualificationsService extends IService<Qualifications> {
 
     ServerResponse updateQualifications(Qualifications qualifications);
 
+    ServerResponse getAllQualifications(Pagination pagination);
+
     ServerResponse getQualificationsByUserId(Pagination pagination);
 
     ServerResponse getQualificationsByStatus(Pagination pagination);

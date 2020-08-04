@@ -4,12 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.practice.supplier.common.domain.ServerResponse;
+import com.practice.supplier.dao.PurchaseInformationMapper;
 import com.practice.supplier.dao.QualificationsMapper;
 import com.practice.supplier.manage.UserManage;
+import com.practice.supplier.model.entity.MarginChange;
 import com.practice.supplier.model.entity.OfferInformation;
 import com.practice.supplier.dao.OfferInformationMapper;
+import com.practice.supplier.model.entity.PurchaseInformation;
 import com.practice.supplier.model.entity.Qualifications;
 import com.practice.supplier.model.form.Pagination;
+import com.practice.supplier.service.IMarginChangeService;
 import com.practice.supplier.service.IOfferInformationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,12 @@ public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMap
 
     @Autowired
     private QualificationsMapper qualificationsMapper;
+
+    @Autowired
+    private PurchaseInformationMapper purchaseInformationMapper;
+
+    @Autowired
+    private IMarginChangeService iMarginChangeService;
 
 
     @Override
@@ -74,6 +84,7 @@ public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMap
                     updateList.add(offerInformation1);
                 }
                 this.saveOrUpdateBatch(updateList);
+                retreatMargin(offerInformation);
             }
             return ServerResponse.createBySuccess();
         }else return ServerResponse.createByError();
@@ -108,6 +119,17 @@ public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMap
     }
 
     @Override
+    public ServerResponse getOfferInformationByStatusByUser(Pagination pagination) {
+        QueryWrapper<OfferInformation> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status",pagination.getStatus())
+            .eq("user_id",UserManage.getUserId());
+        PageHelper.startPage(pagination.getPageNum(),pagination.getPageSize());
+        List<OfferInformation> offerInformationList = baseMapper.selectList(queryWrapper);
+        PageInfo<OfferInformation> pageInfo= new PageInfo<>(offerInformationList);
+        return ServerResponse.createBySuccess(pageInfo);
+    }
+
+    @Override
     public ServerResponse getOfferInformationByPurchaseOrder(Pagination pagination) {
         QueryWrapper<OfferInformation> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("purchase_order",pagination.getOthers())
@@ -116,6 +138,23 @@ public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMap
         List<OfferInformation> offerInformationList = baseMapper.selectList(queryWrapper);
         PageInfo<OfferInformation> pageInfo= new PageInfo<>(offerInformationList);
         return ServerResponse.createBySuccess(pageInfo);
+    }
+
+    //退还保证金
+    private void retreatMargin(OfferInformation offerInformation){
+        QueryWrapper<PurchaseInformation> purchaseInformationQueryWrapper = new QueryWrapper<>();
+        purchaseInformationQueryWrapper.eq("purchase_order",offerInformation.getPurchaseOrder());
+        PurchaseInformation purchaseInformation = purchaseInformationMapper.selectOne(purchaseInformationQueryWrapper);
+        QueryWrapper<OfferInformation> offerInformationQueryWrapper = new QueryWrapper<>();
+        offerInformationQueryWrapper.eq("purchase_order",offerInformation.getPurchaseOrder());
+        List<OfferInformation> offerInformationList = baseMapper.selectList(offerInformationQueryWrapper);
+        for(OfferInformation offerInformation1 : offerInformationList){
+            MarginChange marginChange =new MarginChange();
+            marginChange.setUserId(offerInformation1.getUserId());
+            marginChange.setUpdateAmount(purchaseInformation.getMargin());
+            iMarginChangeService.addIMarginChangeByMargin(marginChange);
+        }
+
     }
 
 }

@@ -3,10 +3,13 @@ package com.practice.supplier.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.practice.supplier.common.authentication.JWTUtil;
 import com.practice.supplier.common.domain.Const;
 import com.practice.supplier.common.domain.ServerResponse;
 import com.practice.supplier.common.exception.AuthenticationException;
+import com.practice.supplier.common.exception.EmptyException;
 import com.practice.supplier.model.entity.User;
 import com.practice.supplier.dao.UserMapper;
 import com.practice.supplier.model.entity.UserMargin;
@@ -37,13 +40,16 @@ import java.util.Map;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
+    @Autowired
+    private IUserMarginService userMarginService;
+
     @Override
     public ServerResponse login(String username, String password) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username)
                 .eq("password", EncryptionService.encryption(password));
         User s = this.getOne(queryWrapper);
-        if(s==null) throw new AuthenticationException("账号或密码错误");
+        if(s==null) throw new EmptyException("账号或密码错误");
         String token = JWTUtil.encryptToken(JWTUtil.sign(s.getId(),s.getIdentity()));
         Map<String,String> data = new HashMap<>();
         data.put("token",token);
@@ -62,10 +68,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             user.setUpdateTime(nowTime);
             user.setIdentity(1);
             if (baseMapper.insert(user)==1){
+                User user1 = baseMapper.selectOne(queryWrapper);
+                UserMargin userMargin = new UserMargin();
+                userMargin.setUserId(user1.getId());
+                userMargin.setCreateTime(LocalDateTime.now());
+                userMarginService.addUserMargin(userMargin);
                 return ServerResponse.createBySuccessMessage("注册成功");
             }else return ServerResponse.createByErrorMessage("注册失败，请稍后重试");
         }
         else return ServerResponse.createByErrorMessage("用户已存在");
+    }
+
+    @Override
+    public ServerResponse resetPassword(int id) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("id",id);
+        User user = baseMapper.selectOne(userQueryWrapper);
+        user.setPassword(EncryptionService.encryption("123456"));
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("username",user.getUsername());
+        user.setUpdateTime(LocalDateTime.now());
+        if(baseMapper.update(user,updateWrapper)==1){
+            return ServerResponse.createBySuccessMessage("密码重置成功");
+        } else return ServerResponse.createByErrorMessage("密码重置失败,请稍后重试");
     }
 
     @Override
@@ -103,8 +128,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public ServerResponse getAllUser(Pagination pagination) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("identity", 1);
+        PageHelper.startPage(pagination.getPageNum(),pagination.getPageSize());
         List<User> userList = baseMapper.selectList(queryWrapper);
-        return ServerResponse.createBySuccess(userList);
+        PageInfo<User> pageInfo= new PageInfo<>(userList);
+        return ServerResponse.createBySuccess(pageInfo);
+    }
+
+    @Override
+    public ServerResponse getAllUserByUserName(Pagination pagination) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("identity", 1)
+                .like("username",pagination.getOthers());
+        PageHelper.startPage(pagination.getPageNum(),pagination.getPageSize());
+        List<User> userList = baseMapper.selectList(queryWrapper);
+        PageInfo<User> pageInfo= new PageInfo<>(userList);
+        return ServerResponse.createBySuccess(pageInfo);
     }
 
     @Override

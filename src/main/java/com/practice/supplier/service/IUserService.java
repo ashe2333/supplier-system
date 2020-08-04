@@ -19,11 +19,15 @@ public interface IUserService extends IService<User> {
 
     ServerResponse registered(User user);
 
+    ServerResponse resetPassword(int id);
+
     ServerResponse changePassword(User user);
 
     ServerResponse changePasswordBySecret(User user);
 
     ServerResponse getAllUser(Pagination pagination);
+
+    ServerResponse getAllUserByUserName(Pagination pagination);
 
     ServerResponse getUserByUserName(String userName);
 
