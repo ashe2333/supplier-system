@@ -83,7 +83,10 @@ public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMap
                     offerInformation1.setStatus(1);
                     updateList.add(offerInformation1);
                 }
-                this.saveOrUpdateBatch(updateList);
+                if(!updateList.isEmpty()){
+                    this.saveOrUpdateBatch(updateList);
+                }
+
                 retreatMargin(offerInformation);
             }
             return ServerResponse.createBySuccess();
@@ -155,6 +158,7 @@ public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMap
         QueryWrapper<PurchaseInformation> purchaseInformationQueryWrapper = new QueryWrapper<>();
         purchaseInformationQueryWrapper.eq("purchase_order",offerInformation.getPurchaseOrder());
         PurchaseInformation purchaseInformation = purchaseInformationMapper.selectOne(purchaseInformationQueryWrapper);
+        if(purchaseInformation==null) return;
         QueryWrapper<OfferInformation> offerInformationQueryWrapper = new QueryWrapper<>();
         offerInformationQueryWrapper.eq("purchase_order",offerInformation.getPurchaseOrder());
         List<OfferInformation> offerInformationList = baseMapper.selectList(offerInformationQueryWrapper);

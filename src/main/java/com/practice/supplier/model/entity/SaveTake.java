@@ -1,6 +1,7 @@
 package com.practice.supplier.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.practice.supplier.common.domain.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,6 +39,7 @@ public class SaveTake extends BaseEntity {
     private int type;
 
     @ApiModelProperty(value = "汇款时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime remittanceTime;
 
     @ApiModelProperty(value = "汇款凭证")
