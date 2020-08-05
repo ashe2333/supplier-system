@@ -41,10 +41,10 @@ public class SaveTakeServiceImp extends ServiceImpl<SaveTakeMapper, SaveTake> im
 
     @Override
     public ServerResponse updateSaveTake(SaveTake saveTake) {
-        if(saveTake.getStatus()==1){
-            UpdateWrapper<SaveTake> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("user_id",saveTake.getUserId());
-            if(baseMapper.update(saveTake,updateWrapper)==1){
+        UpdateWrapper<SaveTake> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("user_id",saveTake.getUserId());
+        if(baseMapper.update(saveTake,updateWrapper)==1){
+            if(saveTake.getStatus()==1){
                 MarginChange marginChange = new MarginChange();
                 marginChange.setCreateTime(LocalDateTime.now());
                 marginChange.setUpdateTime(LocalDateTime.now());
@@ -55,12 +55,12 @@ public class SaveTakeServiceImp extends ServiceImpl<SaveTakeMapper, SaveTake> im
                 }
                 if(saveTake.getType()==1){
                     marginChange.setUpdateType("用户退还保证金取出");
+                    marginChange.setUpdateAmount(saveTake.getChangeAmount()*(-1));
                 }
                 iMarginChangeService.addIMarginChangeByDeposit(marginChange);
-                return ServerResponse.createBySuccess();
-            } else return ServerResponse.createByError();
-        }
-        return null;
+            }
+            return ServerResponse.createBySuccess();
+        } else return ServerResponse.createByError();
     }
 
     @Override

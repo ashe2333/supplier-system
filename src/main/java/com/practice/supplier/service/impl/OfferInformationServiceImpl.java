@@ -86,7 +86,6 @@ public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMap
                 if(!updateList.isEmpty()){
                     this.saveOrUpdateBatch(updateList);
                 }
-
                 retreatMargin(offerInformation);
             }
             return ServerResponse.createBySuccess();
