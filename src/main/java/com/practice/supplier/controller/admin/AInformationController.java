@@ -50,6 +50,7 @@ public class AInformationController {
         return iInformationService.getInformationById1(userId);
     }
 
+
     @ApiOperation("获取所有用户注册信息")
     @GetMapping("/getAllInformation")
     @Permission(roles = Const.ADMIN)

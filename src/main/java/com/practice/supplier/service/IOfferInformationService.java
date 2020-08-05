@@ -31,4 +31,6 @@ public interface IOfferInformationService extends IService<OfferInformation> {
 
     ServerResponse getOfferInformationByPurchaseOrder(Pagination pagination);
 
+    ServerResponse getOfferInformationByPurchaseOrder1(Pagination pagination);
+
 }

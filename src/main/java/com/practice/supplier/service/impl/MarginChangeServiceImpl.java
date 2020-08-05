@@ -33,7 +33,6 @@ public class MarginChangeServiceImpl extends ServiceImpl<MarginChangeMapper, Mar
 
     @Override
     public ServerResponse addIMarginChangeByMargin(MarginChange marginChange) {
-        //marginChange.setUserId(UserManage.getUserId());
         marginChange.setCreateTime(LocalDateTime.now());
         marginChange.setUpdateTime(LocalDateTime.now());
         float updateAmount = marginChange.getUpdateAmount();

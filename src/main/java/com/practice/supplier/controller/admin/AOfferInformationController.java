@@ -51,4 +51,11 @@ public class AOfferInformationController {
         return offerInformationService.getOfferInformationByStatus(pagination);
     }
 
+    @ApiOperation("依据订单编号（others）获取报价信息")
+    @GetMapping("/getOfferInformationByOthers")
+    @Permission(roles = Const.ADMIN)
+    public ServerResponse getOfferInformationByOthers(Pagination pagination) {
+        return offerInformationService.getOfferInformationByPurchaseOrder1(pagination);
+    }
+
 }

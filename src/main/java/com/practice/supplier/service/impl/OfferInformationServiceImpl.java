@@ -132,8 +132,18 @@ public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMap
     @Override
     public ServerResponse getOfferInformationByPurchaseOrder(Pagination pagination) {
         QueryWrapper<OfferInformation> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("purchase_order",pagination.getOthers())
+        queryWrapper.like("purchase_order",pagination.getOthers())
                 .eq("user_id",UserManage.getUserId());
+        PageHelper.startPage(pagination.getPageNum(),pagination.getPageSize());
+        List<OfferInformation> offerInformationList = baseMapper.selectList(queryWrapper);
+        PageInfo<OfferInformation> pageInfo= new PageInfo<>(offerInformationList);
+        return ServerResponse.createBySuccess(pageInfo);
+    }
+
+    @Override
+    public ServerResponse getOfferInformationByPurchaseOrder1(Pagination pagination) {
+        QueryWrapper<OfferInformation> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("purchase_order",pagination.getOthers());
         PageHelper.startPage(pagination.getPageNum(),pagination.getPageSize());
         List<OfferInformation> offerInformationList = baseMapper.selectList(queryWrapper);
         PageInfo<OfferInformation> pageInfo= new PageInfo<>(offerInformationList);

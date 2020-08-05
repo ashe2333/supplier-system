@@ -35,8 +35,8 @@ public class InformationServiceImpl extends ServiceImpl<InformationMapper, Infor
 
     @Override
     public ServerResponse registered(Information information) {
-        //information.setUserId(1);
         information.setUserId(UserManage.getUserId());
+        information.setStatus(0);
         information.setCreateTime(LocalDateTime.now());
         information.setUpdateTime(LocalDateTime.now());
         if(baseMapper.insert(information)==1){
