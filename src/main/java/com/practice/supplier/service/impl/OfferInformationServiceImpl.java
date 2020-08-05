@@ -47,7 +47,7 @@ public class OfferInformationServiceImpl extends ServiceImpl<OfferInformationMap
     @Override
     public ServerResponse judgment(String companyName) {
         QueryWrapper<Qualifications> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",1)
+        queryWrapper.eq("user_id",UserManage.getUserId())
                 .eq("registered_object",companyName)
                 .eq("status",2);
         if(qualificationsMapper.selectList(queryWrapper).isEmpty()){
