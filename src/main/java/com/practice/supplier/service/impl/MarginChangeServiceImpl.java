@@ -60,16 +60,18 @@ public class MarginChangeServiceImpl extends ServiceImpl<MarginChangeMapper, Mar
         UserMargin userMargin = iUserMarginService.getUserMarginById(marginChange.getUserId());
         float depositAmount = userMargin.getDepositAmount() + updateAmount;
         float balance = userMargin.getNotFrozen() + updateAmount;
-        userMargin.setUpdateTime(LocalDateTime.now());
-        userMargin.setDepositAmount(depositAmount);
-        userMargin.setNotFrozen(balance);
-        marginChange.setDepositAmount(depositAmount);
-        marginChange.setNotFrozen(balance);
-        if(iUserMarginService.updateUserMargin(userMargin).isSuccess()){
-            if(baseMapper.insert(marginChange)==1){
-                return ServerResponse.createBySuccess();
-            } else return ServerResponse.createByError();
-        }else return ServerResponse.createByErrorMessage("更新失败，请稍后重试");
+        if(balance>=0){
+            userMargin.setUpdateTime(LocalDateTime.now());
+            userMargin.setDepositAmount(depositAmount);
+            userMargin.setNotFrozen(balance);
+            marginChange.setDepositAmount(depositAmount);
+            marginChange.setNotFrozen(balance);
+            if(iUserMarginService.updateUserMargin(userMargin).isSuccess()){
+                if(baseMapper.insert(marginChange)==1){
+                    return ServerResponse.createBySuccess();
+                } else return ServerResponse.createByError();
+            }else return ServerResponse.createByErrorMessage("更新失败，请稍后重试");
+        }else return ServerResponse.createByErrorMessage("余额不足");
     }
 
 

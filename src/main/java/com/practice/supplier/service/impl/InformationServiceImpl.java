@@ -47,7 +47,7 @@ public class InformationServiceImpl extends ServiceImpl<InformationMapper, Infor
     @Override
     public ServerResponse updateInformation(Information information) {
         UpdateWrapper<Information> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("user_id",information.getUserId());
+        updateWrapper.eq("id",information.getId());
         information.setUpdateTime(LocalDateTime.now());
         if(baseMapper.update(information,updateWrapper)==1){
             return ServerResponse.createBySuccessMessage("修改注册信息成功");

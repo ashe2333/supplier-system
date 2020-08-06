@@ -114,7 +114,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("username",user.getUsername())
                 .eq("secret_question",user.getSecretQuestion())
-                .eq("secret_answer",user.getSecretQuestion());
+                .eq("secret_answer",user.getSecretAnswer());
         user.setUpdateTime(LocalDateTime.now());
         if(baseMapper.update(user,updateWrapper)==1){
             return ServerResponse.createBySuccessMessage("密码修改成功");

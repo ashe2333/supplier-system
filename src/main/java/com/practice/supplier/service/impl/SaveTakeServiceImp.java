@@ -43,24 +43,28 @@ public class SaveTakeServiceImp extends ServiceImpl<SaveTakeMapper, SaveTake> im
     public ServerResponse updateSaveTake(SaveTake saveTake) {
         UpdateWrapper<SaveTake> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("user_id",saveTake.getUserId());
-        if(baseMapper.update(saveTake,updateWrapper)==1){
-            if(saveTake.getStatus()==1){
-                MarginChange marginChange = new MarginChange();
-                marginChange.setCreateTime(LocalDateTime.now());
-                marginChange.setUpdateTime(LocalDateTime.now());
-                marginChange.setUserId(saveTake.getUserId());
-                marginChange.setUpdateAmount(saveTake.getChangeAmount());
-                if(saveTake.getType()==0){
-                    marginChange.setUpdateType("用户汇款存入");
-                }
-                if(saveTake.getType()==1){
-                    marginChange.setUpdateType("用户退还保证金取出");
-                    marginChange.setUpdateAmount(saveTake.getChangeAmount()*(-1));
-                }
-                iMarginChangeService.addIMarginChangeByDeposit(marginChange);
+        if(saveTake.getStatus()==1){
+            MarginChange marginChange = new MarginChange();
+            marginChange.setCreateTime(LocalDateTime.now());
+            marginChange.setUpdateTime(LocalDateTime.now());
+            marginChange.setUserId(saveTake.getUserId());
+            marginChange.setUpdateAmount(saveTake.getChangeAmount());
+            if(saveTake.getType()==0){
+                marginChange.setUpdateType("用户汇款存入");
             }
+            if(saveTake.getType()==1){
+                marginChange.setUpdateType("用户退还保证金取出");
+                marginChange.setUpdateAmount(saveTake.getChangeAmount()*(-1));
+            }
+            if(iMarginChangeService.addIMarginChangeByDeposit(marginChange).isSuccess()){
+                if(baseMapper.update(saveTake,updateWrapper)==1){
+                    return ServerResponse.createBySuccess();
+                }else return ServerResponse.createByError();
+            } else return ServerResponse.createByErrorMessage("余额不足");
+        }else if(baseMapper.update(saveTake,updateWrapper)==1){
             return ServerResponse.createBySuccess();
-        } else return ServerResponse.createByError();
+        }
+        return ServerResponse.createByError();
     }
 
     @Override
